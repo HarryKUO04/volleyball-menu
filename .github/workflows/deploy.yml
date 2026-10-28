@@ -1,0 +1,73 @@
+name: 同步 HackMD 並發布排球菜單
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 */6 * * *'  # 每六小時同步一次；GitHub 的排程可能延遲
+  workflow_dispatch:       # 也可以在 Actions 裡手動執行
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 讀取程式碼
+        uses: actions/checkout@v4
+
+      - name: 安裝 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 下載 HackMD 原始 Markdown
+        shell: bash
+        run: |
+          set -euo pipefail
+          if curl --fail --location --silent --show-error \
+            --retry 3 --connect-timeout 20 --max-time 90 \
+            -H 'User-Agent: Mozilla/5.0 (compatible; volleyball-notes-site/1.0)' \
+            'https://hackmd.io/zf8AQK5NRiyvSDtbye4XTQ/download' -o current-note.md; then
+            echo 'HackMD 下載成功。'
+          elif [[ -f note.md ]]; then
+            echo 'HackMD 下載失敗，改用倉庫內手動提供的 note.md。'
+            cp note.md current-note.md
+          else
+            echo '::error::無法取得 HackMD 筆記，請檢查是否開放 Everyone 閱讀，或上傳匯出的 note.md。'
+            exit 1
+          fi
+          python - <<'PY'
+          from pathlib import Path
+          content = Path('current-note.md').read_text(encoding='utf-8-sig')
+          if len(content) < 100 or not any(line.lstrip().startswith('#') for line in content.splitlines()):
+              raise SystemExit('取得的不是有效的 Markdown 筆記；請使用 HackMD 手動匯出 note.md。')
+          print(f'下載到 {len(content)} 字元的 Markdown')
+          PY
+
+      - name: 安裝 Markdown 轉換工具並產生網頁
+        run: |
+          python -m pip install --disable-pip-version-check 'markdown-it-py>=4,<5'
+          python build.py --input current-note.md --output site
+
+      - name: 設定 GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上傳網站
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: 發布網站
+        id: deployment
+        uses: actions/deploy-pages@v4
