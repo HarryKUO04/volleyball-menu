@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0c625f" />
+  <meta name="description" content="成大電機排球訓練菜單：熱身、接球、舉球、扣球、發球、攔網與體能訓練。" />
+  <title>%%TITLE%%</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="app.js"></script>
+</head>
+<body data-demo="%%DEMO%%">
+  <header class="topbar">
+    <div class="topbar-brand">
+      <button class="mobile-menu icon-button" id="open-sidebar" type="button" aria-label="開啟側邊目錄" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <span class="logo" aria-hidden="true">🏐</span>
+      <span class="brand-title">電機排球 <span>訓練菜單</span></span>
+    </div>
+    <div class="topbar-actions">
+      <a class="source-link" href="https://hackmd.io/zf8AQK5NRiyvSDtbye4XTQ" target="_blank" rel="noopener noreferrer">原始 HackMD <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <div id="overlay" class="overlay" hidden></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar" aria-label="文章目錄">
+      <div class="sidebar-inner">
+        <div class="sidebar-topline">
+          <div class="eyebrow">TRAINING LIBRARY</div>
+          <button class="icon-button close-sidebar" id="close-sidebar" type="button" aria-label="關閉目錄">✕</button>
+        </div>
+        <div class="sidebar-title">訓練內容</div>
+        <label class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+          <input type="search" id="toc-search" placeholder="搜尋訓練項目…" autocomplete="off" aria-label="搜尋標題" />
+          <kbd>/</kbd>
+        </label>
+        <div class="toc-controls">
+          <button type="button" id="expand-all">全部展開</button>
+          <span aria-hidden="true">·</span>
+          <button type="button" id="collapse-all">全部收合</button>
+        </div>
+        <nav id="toc" class="toc" aria-label="自動產生的三級目錄"></nav>
+        <p class="no-matches" id="no-matches" hidden>沒有符合的訓練標題</p>
+        <div class="sidebar-bottom">依據 Markdown <code>#</code> <code>##</code> <code>###</code> 自動建立</div>
+      </div>
+    </aside>
+    <main id="main" class="main">
+      <div class="document-meta"><span class="meta-pill">排球訓練</span><span class="meta-divider">/</span><span>共 %%HEADING_COUNT%% 個標題</span><span class="demo-note" id="demo-note">範例預覽，正式部署會同步完整 HackMD</span></div>
+      <article id="article" class="article">
+        %%ARTICLE%%
+      </article>
+      <div class="end-card">
+        <div class="end-card-icon">✓</div>
+        <div><strong>已經看到最後了</strong><p>點選左側目錄可以快速切換訓練內容。</p></div>
+        <button id="back-top" type="button">回到頂部 ↑</button>
+      </div>
+      <footer class="footer">成大電機排球訓練菜單 <span>·</span> Powered by Markdown</footer>
+    </main>
+  </div>
+</body>
+</html>
